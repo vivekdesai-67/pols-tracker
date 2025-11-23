@@ -292,10 +292,20 @@ export default function MapboxMap({ vehicles, selectedVehicleId, onVehicleClick 
               🚚
             </div>
 
+            {/* Speed warning indicator */}
+            {vehicle.currentSpeed >= 95 && (
+              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded shadow-lg animate-pulse">
+                ⚠️ {Math.round(vehicle.currentSpeed)} km/h
+              </div>
+            )}
+
             {/* Vehicle ID label */}
             {selectedVehicleId === vehicle.id && (
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white text-gray-900 text-xs font-semibold px-2 py-1 rounded shadow-lg whitespace-nowrap">
+              <div className={`absolute ${vehicle.currentSpeed >= 95 ? '-top-12' : '-top-8'} left-1/2 transform -translate-x-1/2 ${
+                vehicle.currentSpeed >= 95 ? 'bg-red-600 text-white' : 'bg-white text-gray-900'
+              } text-xs font-semibold px-2 py-1 rounded shadow-lg whitespace-nowrap`}>
                 {vehicle.id} • {Math.round(vehicle.currentSpeed)} km/h
+                {vehicle.currentSpeed >= 95 && ' ⚠️'}
               </div>
             )}
           </div>

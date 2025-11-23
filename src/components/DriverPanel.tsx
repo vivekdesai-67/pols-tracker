@@ -94,9 +94,11 @@ export default function DriverPanel({
         {/* Current Status */}
         {vehicle && (
           <div className="p-4 border-b border-gray-800">
-            <div className="bg-gray-800 p-4 rounded-lg">
+            <div className={`p-4 rounded-lg ${
+              vehicle.currentSpeed >= 95 ? 'bg-red-900/30 border border-red-500/50' : 'bg-gray-800'
+            }`}>
               <p className="text-xs text-gray-400 mb-2">Current Status</p>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <span className={`text-sm font-semibold uppercase ${
                   vehicle.status === 'on-time' ? 'text-green-500' : 
                   vehicle.status === 'warning' ? 'text-yellow-500' : 
@@ -104,8 +106,18 @@ export default function DriverPanel({
                 }`}>
                   {vehicle.status}
                 </span>
-                <span className="text-sm text-white">{Math.round(vehicle.currentSpeed)} km/h</span>
+                <span className={`text-sm font-bold ${
+                  vehicle.currentSpeed >= 95 ? 'text-red-500' : 'text-white'
+                }`}>
+                  {Math.round(vehicle.currentSpeed)} km/h
+                </span>
               </div>
+              {vehicle.currentSpeed >= 95 && (
+                <div className="text-xs text-red-400 mt-2 flex items-center gap-1">
+                  <span>⚠️</span>
+                  <span>Near speed limit (100 km/h max)</span>
+                </div>
+              )}
             </div>
           </div>
         )}

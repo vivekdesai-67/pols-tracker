@@ -94,12 +94,21 @@ export default function DetailPanel({ vehicle, isOpen, onClose }: DetailPanelPro
 
             {/* Speed Information */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-gray-800 p-4 rounded-lg">
+              <div className={`p-4 rounded-lg ${
+                vehicle.currentSpeed >= 95 
+                  ? 'bg-red-900/30 border border-red-500/50' 
+                  : 'bg-gray-800'
+              }`}>
                 <p className="text-xs text-gray-400 mb-1">Current Speed</p>
-                <p className="text-2xl font-bold text-white">
+                <p className={`text-2xl font-bold ${
+                  vehicle.currentSpeed >= 95 ? 'text-red-500' : 'text-white'
+                }`}>
                   {Math.round(vehicle.currentSpeed)}
                   <span className="text-sm text-gray-400 ml-1">km/h</span>
                 </p>
+                {vehicle.currentSpeed >= 95 && (
+                  <p className="text-xs text-red-400 mt-1">⚠️ Near speed limit!</p>
+                )}
               </div>
               <div className="bg-gray-800 p-4 rounded-lg">
                 <p className="text-xs text-gray-400 mb-1">Required Speed</p>
@@ -109,6 +118,19 @@ export default function DetailPanel({ vehicle, isOpen, onClose }: DetailPanelPro
                 </p>
               </div>
             </div>
+
+            {/* Speed Limit Warning */}
+            {vehicle.currentSpeed >= 95 && (
+              <div className="p-4 rounded-lg border bg-red-900/30 border-red-500/30">
+                <p className="text-sm font-semibold text-red-500 mb-2">
+                  🚨 Speed Limit Warning
+                </p>
+                <p className="text-sm text-gray-300">
+                  Vehicle is approaching the maximum speed limit of 100 km/h. 
+                  Current speed: {Math.round(vehicle.currentSpeed)} km/h
+                </p>
+              </div>
+            )}
 
             {/* ETA Information */}
             <div className="space-y-3">

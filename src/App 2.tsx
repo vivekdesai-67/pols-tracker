@@ -7,7 +7,6 @@ import AdminSidebar from './components/AdminSidebar';
 import DetailPanel from './components/DetailPanel';
 import DriverPanel from './components/DriverPanel';
 import LandingPage from './components/LandingPage';
-import SpeedViolationsPanel from './components/SpeedViolationsPanel';
 import { generateFleetReport } from './utils/reportGenerator';
 
 function App() {
@@ -17,20 +16,19 @@ function App() {
   const [showLanding, setShowLanding] = useState(true);
   const [driverProfile, setDriverProfile] = useState<any>(null);
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [showSpeedPanel, setShowSpeedPanel] = useState(false);
 
   // Initialize auth on app load
   useEffect(() => {
     initAuth();
   }, [initAuth]);
 
-  // Always show landing page for unauthenticated users
+  // Check if user has visited before
   useEffect(() => {
-    // Only skip landing if user is authenticated
-    if (isAuthenticated) {
+    const hasVisited = localStorage.getItem('hasVisitedLosPollos');
+    if (hasVisited) {
       setShowLanding(false);
     }
-  }, [isAuthenticated]);
+  }, []);
 
   // Update clock every second
   useEffect(() => {
@@ -158,6 +156,7 @@ function App() {
   }, [currentUser]);
 
   const handleGetStarted = () => {
+    localStorage.setItem('hasVisitedLosPollos', 'true');
     setShowLanding(false);
   };
 
@@ -406,24 +405,6 @@ function App() {
                 <p className="text-xs text-red-400 mb-1">Critical</p>
                 <p className="text-2xl font-bold text-red-500">{vehicles.filter(v => v.status === 'critical').length}</p>
               </div>
-              
-              {/* Speed Monitor Card - Clickable */}
-              <button
-                onClick={() => setShowSpeedPanel(!showSpeedPanel)}
-                className={`px-4 py-3 rounded-lg text-center min-w-[80px] transition-all ${
-                  vehicles.filter(v => v.currentSpeed >= 95).length > 0
-                    ? 'bg-red-900/30 border border-red-500/50 hover:bg-red-900/50'
-                    : 'bg-gray-800 hover:bg-gray-700'
-                } ${showSpeedPanel ? 'ring-2 ring-[#F9D71C]' : ''}`}
-              >
-                <p className="text-xs text-gray-400 mb-1">Speeding</p>
-                <p className={`text-2xl font-bold ${
-                  vehicles.filter(v => v.currentSpeed >= 95).length > 0 ? 'text-red-500 animate-pulse' : 'text-white'
-                }`}>
-                  {vehicles.filter(v => v.currentSpeed >= 95).length}
-                </p>
-              </button>
-
               <div className="bg-gray-800 px-4 py-3 rounded-lg text-center min-w-[140px]">
                 <p className="text-xs text-gray-400 mb-1">Live Clock</p>
                 <p className="text-lg font-bold text-white font-mono">
@@ -451,14 +432,6 @@ function App() {
             <div className="flex items-center justify-center h-full text-gray-400">
               Loading vehicles...
             </div>
-          )}
-
-          {/* Speed Violations Panel */}
-          {showSpeedPanel && (
-            <SpeedViolationsPanel
-              vehicles={vehicles}
-              onVehicleClick={handleVehicleClick}
-            />
           )}
 
           {/* Detail Panel */}

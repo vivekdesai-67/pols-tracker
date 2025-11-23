@@ -12,7 +12,7 @@ const JWT_EXPIRES_IN = '24h';
 const ADMIN_CREDENTIALS = {
   id: 'admin-001',
   email: 'admin@lospollos.com',
-  password: '$2a$10$8K1p/a0dL6KAPLADaCO4SOK6vkjyEGYcEKHvqOyX.0jGjZ5bvLgXe', // bcrypt hash of 'admin123'
+  password: '$2b$10$A7O1qE4aG7gNByOds.sQ9.Jwy5hXRJDXEgF1zi.AcH5mrZyYr7YqC', // bcrypt hash of 'admin123'
   name: 'Gus Fring',
   role: 'admin'
 };

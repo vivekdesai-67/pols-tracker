@@ -52,7 +52,7 @@ router.get('/status/available', async (req, res) => {
 // Create new driver
 router.post('/', async (req, res) => {
   try {
-    const { name, email, phone, licenseNumber, vehicleDetails } = req.body;
+    const { name, email, phone, licenseNumber, vehicleDetails, password } = req.body;
 
     // Check if driver already exists
     const existingDriver = await Driver.findOne({ 
@@ -65,9 +65,14 @@ router.post('/', async (req, res) => {
       });
     }
 
+    // Import bcrypt for password hashing
+    const bcrypt = await import('bcryptjs');
+    const hashedPassword = await bcrypt.default.hash(password || 'driver123', 10);
+
     const driver = new Driver({
       name,
       email,
+      password: hashedPassword,
       phone,
       licenseNumber,
       vehicleDetails,
@@ -77,7 +82,8 @@ router.post('/', async (req, res) => {
     await driver.save();
     res.status(201).json(driver);
   } catch (error) {
-    res.status(500).json({ message: 'Error creating driver', error });
+    console.error('Error creating driver:', error);
+    res.status(500).json({ message: 'Error creating driver', error: error.message });
   }
 });
 

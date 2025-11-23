@@ -68,13 +68,27 @@ export const simulateGPSUpdate = (vehicle: Vehicle): Vehicle => {
     newSpeed = Math.max(10, newSpeed * 0.5); // Slow down for traffic
   }
 
-  // Occasionally simulate clear road (3% chance)
+  // Occasionally simulate clear road/highway (3% chance)
   if (Math.random() < 0.03) {
     newSpeed = Math.min(60, newSpeed * 1.2); // Speed up slightly
   }
 
-  // Ensure speed stays within realistic city bounds (5-65 km/h)
-  newSpeed = Math.max(5, Math.min(65, newSpeed));
+  // DEMO: Occasionally simulate highway speeds to showcase speed monitoring (2% chance)
+  // This allows some vehicles to reach 85-98 km/h to demonstrate the speed warning system
+  if (Math.random() < 0.02) {
+    newSpeed = 85 + Math.random() * 13; // 85-98 km/h (approaching limit)
+    console.log(`🏎️ ${vehicle.id} entering highway - speed increased to ${newSpeed.toFixed(1)} km/h`);
+  }
+
+  // Ensure speed stays within realistic bounds (5-65 km/h normally, up to 98 for highway demo)
+  newSpeed = Math.max(5, Math.min(98, newSpeed));
+
+  // SPEED LIMIT CHECK: Cap at 100 km/h and warn if exceeded
+  const SPEED_LIMIT = 100; // km/h
+  if (newSpeed > SPEED_LIMIT) {
+    console.warn(`⚠️ SPEED VIOLATION: Vehicle ${vehicle.id} (${vehicle.driverName}) exceeded speed limit! ${newSpeed.toFixed(1)} km/h > ${SPEED_LIMIT} km/h`);
+    newSpeed = SPEED_LIMIT; // Cap at speed limit
+  }
 
   // Follow route if available, otherwise move directly to destination
   let newPosition;

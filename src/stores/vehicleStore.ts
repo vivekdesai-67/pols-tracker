@@ -98,7 +98,8 @@ const createInitialVehicles = (): Vehicle[] => {
     const distanceKm = calculateDistance(position, destination);
     
     // Set realistic speed (30-60 km/h for city traffic)
-    const currentSpeed = 30 + Math.random() * 30;
+    // Speed is capped at 100 km/h maximum
+    const currentSpeed = Math.min(100, 30 + Math.random() * 30);
     
     // Calculate realistic ETA based on distance and average speed
     // Assume average speed of 35-45 km/h for city driving
